@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaksona.app.auth.mapper.UserDAO">
+	<sql id="ALL_COLUMN">
+		id,username,password,uiid,status
+	</sql>
+
+	<select id="selectAll" resultType="com.jaksona.app.auth.entity.User">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM user
+	</select>
+
+	<select id="selectByEntity" parameterType="com.jaksona.app.auth.entity.User" resultType="com.jaksona.app.auth.entity.User">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM user
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="username != null and username != ''">
+				username = #{username}
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password}
+			</if>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertSelective" parameterType="com.jaksona.app.auth.entity.User" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO user (id, username, password, uiid, status)
+		VALUES (#{id}, #{username}, #{password}, #{uiid}, #{status})
+	</insert>
+	<update id="updateByIdSelective" parameterType="com.jaksona.app.auth.entity.User">
+		UPDATE user
+		<set>
+			<if test="username != null and username != ''">
+				username = #{username}
+			</if>
+			<if test="password != null and password != ''">
+				password = #{password}
+			</if>
+			<if test="uiid != null">
+				uiid = #{uiid}
+			</if>
+			<if test="status != null">
+				status = #{status}
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+	<delete id="physicDeleteById" parameterType="long">
+		DELETE FROM user
+		WHERE id = #{id}
+	</delete>
+	<update id="logicDeleteById" parameterType="long">
+		UPDATE user SET status = -1 WHERE id = #{id}
+	</update>
+
+</mapper>
