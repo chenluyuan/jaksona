@@ -16,10 +16,10 @@ import javax.sql.DataSource;
  * 数据库配置
  * @author jaksona
  */
-@Configuration
-@EnableTransactionManagement
-@ComponentScan(basePackages = "com.jaksona.app")
-@MapperScan(basePackages = "com.jaksona.app")
+//@Configuration
+//@EnableTransactionManagement
+//@ComponentScan(basePackages = "com.jaksona.app")
+//@MapperScan(basePackages = "com.jaksona.app")
 public class DatabaseConfig {
 
 	@Bean

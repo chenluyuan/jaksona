@@ -1,44 +1,51 @@
 package com.jaksona.app.config;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
-import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 
-//@Configuration
-//@EnableWebSecurity
-public class SecurityConfig extends WebSecurityConfigurerAdapter {
+/**
+ * 应用安全配置
+ * @author jaksona
+ */
+@EnableWebSecurity
+public class SecurityConfig {
 
-	@Override
-	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-		auth.inMemoryAuthentication().withUser("marissa").password("wombat").roles("USER").and().withUser("sam")
-				.password("kangaroo").roles("USER");
+	@Autowired
+	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+		auth
+				.inMemoryAuthentication()
+					.withUser("user").password("password").roles("USER").and()
+					.withUser("admin").password("password").roles("USER", "ADMIN");
 	}
 
-	@Override
-	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**");
+	@Configuration
+	public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http
+					.antMatcher("/api/**")
+					.authorizeRequests()
+						.anyRequest().hasRole("ADMIN")
+						.and()
+					.httpBasic();
+		}
 	}
 
-	@Override
-	protected void configure(HttpSecurity http) throws Exception {
-		// @formatter:off
-    	    http.authorizeRequests()
-                .antMatchers("/sparklr/**","/facebook/**").hasRole("USER")
-                .anyRequest().permitAll()
-                .and()
-            .logout()
-                .logoutSuccessUrl("/login.jsp")
-                .permitAll()
-                .and()
-            .formLogin()
-            	.loginProcessingUrl("/login")
-                .loginPage("/login.jsp")
-                .failureUrl("/login.jsp?authentication_error=true")
-                .permitAll();
-    	// @formatter:on
+	@Configuration
+	@Order(1)
+	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
+		@Override
+		protected void configure(HttpSecurity http) throws Exception {
+			http
+					.authorizeRequests()
+						.anyRequest().authenticated()
+						.and()
+					.formLogin();
+		}
 	}
-
 }

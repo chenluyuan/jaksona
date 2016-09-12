@@ -1,15 +1,15 @@
 package com.jaksona.app;
 
-import com.jaksona.app.config.DatabaseConfig;
-import com.jaksona.app.config.SecurityConfig;
-import com.jaksona.app.config.ViewConfig;
-import com.jaksona.app.config.WebMvcConfig;
+import com.jaksona.app.config.*;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.DelegatingFilterProxy;
 import org.springframework.web.servlet.support.AbstractAnnotationConfigDispatcherServletInitializer;
 
 import javax.servlet.Filter;
+import javax.servlet.FilterConfig;
+import javax.servlet.ServletContext;
+import java.util.Enumeration;
 
 /**
  *  服务器启动入口
@@ -42,8 +42,7 @@ public class WebApplicationStartup extends AbstractAnnotationConfigDispatcherSer
 	 */
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-//		return new Class<?>[]{WebMvcConfig.class, DatabaseConfig.class, SecurityConfig.class};
-		return new Class<?>[]{WebMvcConfig.class};
+		return new Class<?>[]{WebMvcConfig.class, SecurityConfig.class};
 	}
 
 	/**
@@ -57,18 +56,4 @@ public class WebApplicationStartup extends AbstractAnnotationConfigDispatcherSer
 		return new String[]{"/"};
 	}
 
-	/**
-	 * Specify filters to add and map to the {@code DispatcherServlet}.
-	 *
-	 * @return an array of filters or {@code null}
-	 * @see #registerServletFilter(ServletContext, Filter)
-	 */
-	@Override
-	protected Filter[] getServletFilters() {
-		DelegatingFilterProxy springSecurityFilter = new DelegatingFilterProxy("springSecurityFilterChain");
-		DelegatingFilterProxy oauth2ClientContextFilter = new DelegatingFilterProxy("oauth2ClientContextFilter");
-		springSecurityFilter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
-		oauth2ClientContextFilter.setContextAttribute("org.springframework.web.servlet.FrameworkServlet.CONTEXT.dispatcher");
-		return new Filter[]{springSecurityFilter, oauth2ClientContextFilter};
-	}
 }
