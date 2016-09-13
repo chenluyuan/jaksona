@@ -1,11 +1,10 @@
 package com.jaksona.app;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.servlet.ModelAndView;
 
 /**
  * @author jaksona
@@ -13,12 +12,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 @ControllerAdvice
 public class AppControllerAdvice {
 
-	private final Logger logger = LogManager.getLogger(getClass());
-
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
-	public String exceptionHandler(Exception e) {
-		logger.error(e);
-		return "404";
+	public ModelAndView exceptionHandler(Exception e) {
+		ModelAndView modelAndView = new ModelAndView("404", "msg", e.getMessage());
+		return modelAndView;
 	}
 }

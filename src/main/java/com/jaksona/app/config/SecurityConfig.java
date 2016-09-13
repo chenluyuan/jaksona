@@ -12,40 +12,37 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
  * 应用安全配置
  * @author jaksona
  */
+@Configuration
 @EnableWebSecurity
-public class SecurityConfig {
+public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
-	@Autowired
-	public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+	@Override
+	protected void configure(AuthenticationManagerBuilder auth) throws Exception {
 		auth
 				.inMemoryAuthentication()
 					.withUser("user").password("password").roles("USER").and()
-					.withUser("admin").password("password").roles("USER", "ADMIN");
+					.withUser("admin").password("password").roles("ADMIN").and()
+					.withUser("dba").password("password").roles("DBA");
 	}
 
-	@Configuration
-	public static class ApiWebSecurityConfigurationAdapter extends WebSecurityConfigurerAdapter {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http
-					.antMatcher("/api/**")
-					.authorizeRequests()
-						.anyRequest().hasRole("ADMIN")
-						.and()
-					.httpBasic();
-		}
-	}
-
-	@Configuration
-	@Order(1)
-	public static class FormLoginWebSecurityConfigurerAdapter extends WebSecurityConfigurerAdapter {
-		@Override
-		protected void configure(HttpSecurity http) throws Exception {
-			http
-					.authorizeRequests()
-						.anyRequest().authenticated()
-						.and()
-					.formLogin();
-		}
+	@Override
+	protected void configure(HttpSecurity http) throws Exception {
+		http
+				.authorizeRequests()
+				.antMatchers("/", "/home")
+					.permitAll()
+				.antMatchers("/admin/**")
+					.access("hasRole('ADMIN')")
+				.antMatchers("/dba/**")
+					.access("hasRole('DBA')")
+					.and()
+				.formLogin()
+					.permitAll()
+					.and()
+				.logout()
+					.permitAll()
+					.and()
+				.exceptionHandling()
+					.accessDeniedPage("/Access_Denied");
 	}
 }
