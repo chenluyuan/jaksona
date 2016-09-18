@@ -1,21 +1,17 @@
-package com.jaksona.app.auth.entity;
+package com.jaksona.app.entity.admin;
 
 import com.jaksona.app.BaseEntity;
 
 /**
  * @author jaksona
  */
-public class User extends BaseEntity{
+public class User extends BaseEntity {
+	// members
 	private String username;
 	private String password;
+	private Boolean enabled;
 
-	public User() {
-	}
-
-	public User(String username, String password) {
-		this.username = username;
-		this.password = password;
-	}
+	// setter and getter
 
 	public String getUsername() {
 		return username;
@@ -31,5 +27,13 @@ public class User extends BaseEntity{
 
 	public void setPassword(String password) {
 		this.password = password;
+	}
+
+	public Boolean getEnabled() {
+		return enabled;
+	}
+
+	public void setEnabled(Boolean enabled) {
+		this.enabled = enabled;
 	}
 }

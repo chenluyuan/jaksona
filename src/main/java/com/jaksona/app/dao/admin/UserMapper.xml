@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaksona.app.entity.admin.User">
+	<sql id="ALL_COLUMN">
+		id,username,password,enabled
+	</sql>
+
+	<select id="selectAll" resultType="com.jaksona.app.entity.admin.User">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM user
+		<if test="extLimit != null">
+			limit #{start}, #{limit}
+		</if>
+	</select>
+
+	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.User" resultType="com.jaksona.app.entity.admin.User">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM user
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="username != null and username != ''">
+				username = #{username}
+			</if>
+			<if test="enabled != null">
+				enabled = #{enabled}
+			</if>
+		</where>
+	</select>
+
+	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.User" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO user (id, username, password, enabled)
+		VALUES (#{id}, #{username}, #{password}, #{enabled})
+	</insert>
+
+</mapper>

@@ -9,6 +9,7 @@ import java.io.Serializable;
 public class BaseEntity implements Serializable {
 	private Long id;
 	private Integer status;
+	private ExtLimit extLimit;
 
 	public Long getId() {
 		return id;
@@ -24,5 +25,13 @@ public class BaseEntity implements Serializable {
 
 	public void setStatus(Integer status) {
 		this.status = status;
+	}
+
+	public ExtLimit getExtLimit() {
+		return extLimit;
+	}
+
+	public void setExtLimit(ExtLimit extLimit) {
+		this.extLimit = extLimit;
 	}
 }

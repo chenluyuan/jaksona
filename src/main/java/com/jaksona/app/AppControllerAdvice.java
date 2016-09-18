@@ -15,7 +15,6 @@ public class AppControllerAdvice {
 	@ExceptionHandler
 	@ResponseStatus(HttpStatus.UNAUTHORIZED)
 	public ModelAndView exceptionHandler(Exception e) {
-		ModelAndView modelAndView = new ModelAndView("404", "msg", e.getMessage());
-		return modelAndView;
+		return new ModelAndView("404", "msg", e.getMessage());
 	}
 }

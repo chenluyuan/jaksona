@@ -42,7 +42,7 @@ public class WebApplicationStartup extends AbstractAnnotationConfigDispatcherSer
 	 */
 	@Override
 	protected Class<?>[] getServletConfigClasses() {
-		return new Class<?>[]{WebMvcConfig.class};
+		return new Class<?>[]{WebMvcConfig.class, OAuth2Config.class, DatabaseConfig.class};
 	}
 
 	/**
