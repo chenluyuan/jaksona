@@ -1,24 +1,26 @@
-package com.jaksona.app.controller;
+package com.jaksona.app.service;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
+/**
+ * @author jaksona
+ */
 import com.jaksona.app.WebApplicationStartup;
-import com.jaksona.app.controller.admin.UserController;
+import com.jaksona.app.dao.admin.UserDAO;
 import com.jaksona.app.entity.admin.User;
 import com.jaksona.app.service.admin.UserService;
+import com.jaksona.app.service.admin.imp.UserServiceImp;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.http.MediaType;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.mockito.Spy;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+
+import javax.annotation.Resource;
 
 import static org.junit.Assert.assertEquals;
 import static org.mockito.Mockito.*;
@@ -28,45 +30,27 @@ import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.header;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-/**
- * @author jaksona
- */
+
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration
 @ContextConfiguration(classes = {WebApplicationStartup.class})
-public class UserControllerTest {
-	private MockMvc mockMvc;
+public class UserServiceTest {
 
-	@Mock
-	private UserService userService;
+	@Autowired
+	private UserDAO userDAO;
 
 	@InjectMocks
-	private UserController userController;
+	private UserService userService = new UserServiceImp();
 
 	@Before
 	public void setUp() {
 		MockitoAnnotations.initMocks(this);
-		this.mockMvc = MockMvcBuilders.standaloneSetup(userController).build();
 	}
 
 	@Test
-	public void testAddUser() throws Exception {
-		long userId = 1;
-		String username = "admin";
-		String password = "admin";
-		User user = new User();
-		user.setUsername(username);
-		user.setPassword(new BCryptPasswordEncoder(8).encode(password));
-		user.setEnabled(true);
-		mockMvc.perform(post("/users").contentType(MediaType.APPLICATION_JSON).content(asJsonString(user))).andDo(print())
-				.andExpect(status().isCreated());
-	}
-
-	public static String asJsonString(final Object obj) {
-		try {
-			return new ObjectMapper().writeValueAsString(obj);
-		} catch (JsonProcessingException e) {
-			return "" + e.getMessage();
-		}
+	public void testLoadUser() {
+		long id = 1;
+		User user = userService.loadUser(id);
+		System.out.println(user);
 	}
 }

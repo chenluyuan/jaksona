@@ -8,4 +8,5 @@ import com.jaksona.app.entity.admin.User;
  */
 public interface UserDAO extends BaseDAO<User> {
 
+	int selectByUsername(String username);
 }

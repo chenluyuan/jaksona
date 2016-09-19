@@ -1,6 +1,7 @@
 package com.jaksona.app.service.admin;
 
 import com.jaksona.app.entity.admin.User;
+import com.jaksona.app.service.admin.exception.TableFieldUniqueException;
 
 import java.util.Collection;
 
@@ -29,7 +30,7 @@ public interface UserService {
 	 * @param user The user that was added
 	 * @return The result of add, -1 for fail
 	 */
-	int addUser(User user);
+	int addUser(User user) throws TableFieldUniqueException;
 
 	/**
 	 * Modify the user
@@ -44,4 +45,11 @@ public interface UserService {
 	 * @return The result of action, -1 for fail
 	 */
 	int removeUser(Long id);
+
+	/**
+	 * Indicates whether or not exists the user that has the username
+	 * @param username The user that has the username
+	 * @return whether or not exists
+	 */
+	boolean existUser(String username);
 }

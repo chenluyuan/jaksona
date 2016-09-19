@@ -6,13 +6,15 @@
 		id,username,password,enabled
 	</sql>
 
-	<select id="selectAll" resultType="com.jaksona.app.entity.admin.User">
+	<select id="selectByPrimaryKey" parameterType="long" resultType="com.jaksona.app.entity.admin.User">
 		SELECT
 		<include refid="ALL_COLUMN"/>
 		FROM user
-		<if test="extLimit != null">
-			limit #{start}, #{limit}
-		</if>
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByUsername" parameterType="String" resultType="int">
+		SELECT count(id) FROM user WHERE username = #{username}
 	</select>
 
 	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.User" resultType="com.jaksona.app.entity.admin.User">
@@ -30,6 +32,9 @@
 				enabled = #{enabled}
 			</if>
 		</where>
+		<if test="extLimit != null">
+			limit #{start}, #{limit}
+		</if>
 	</select>
 
 	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.User" keyProperty="id" useGeneratedKeys="true">
