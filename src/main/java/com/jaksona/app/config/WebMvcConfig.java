@@ -28,7 +28,7 @@ import java.util.List;
  */
 @Configuration
 @EnableWebMvc
-@ComponentScan(basePackages = "com.jaksona.app")
+@ComponentScan(basePackages = "com.jaksona.app.controller")
 public class WebMvcConfig extends WebMvcConfigurerAdapter {
 
 	@Override

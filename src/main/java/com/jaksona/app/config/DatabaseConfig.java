@@ -18,7 +18,7 @@ import javax.sql.DataSource;
  */
 @Configuration
 @EnableTransactionManagement
-@MapperScan(basePackages = "com.jaksona.app")
+@MapperScan(basePackages = "com.jaksona.app.dao")
 public class DatabaseConfig {
 
 	@Bean
