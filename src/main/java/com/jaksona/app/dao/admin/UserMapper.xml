@@ -9,7 +9,7 @@
 	<select id="selectByPrimaryKey" parameterType="long" resultType="com.jaksona.app.entity.admin.User">
 		SELECT
 		<include refid="ALL_COLUMN"/>
-		FROM user
+		FROM users
 		WHERE id = #{id}
 	</select>
 
@@ -20,7 +20,7 @@
 	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.User" resultType="com.jaksona.app.entity.admin.User">
 		SELECT
 		<include refid="ALL_COLUMN"/>
-		FROM user
+		FROM users
 		<where>
 			<if test="id != null">
 				id = #{id}
@@ -38,8 +38,7 @@
 	</select>
 
 	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.User" keyProperty="id" useGeneratedKeys="true">
-		INSERT INTO user (id, username, password, enabled)
+		INSERT INTO users (id, username, password, enabled)
 		VALUES (#{id}, #{username}, #{password}, #{enabled})
 	</insert>
-
 </mapper>

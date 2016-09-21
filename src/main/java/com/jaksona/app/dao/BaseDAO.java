@@ -1,4 +1,4 @@
-package com.jaksona.app;
+package com.jaksona.app.dao;
 
 import java.util.List;
 

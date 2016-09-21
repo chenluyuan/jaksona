@@ -1,6 +1,6 @@
 package com.jaksona.app.entity.admin;
 
-import com.jaksona.app.BaseEntity;
+import com.jaksona.app.entity.BaseEntity;
 
 /**
  * @author jaksona

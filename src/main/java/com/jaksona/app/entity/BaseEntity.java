@@ -1,4 +1,6 @@
-package com.jaksona.app;
+package com.jaksona.app.entity;
+
+import com.jaksona.app.ExtLimit;
 
 import java.io.Serializable;
 

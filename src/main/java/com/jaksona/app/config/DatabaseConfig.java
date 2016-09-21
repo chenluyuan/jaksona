@@ -4,11 +4,13 @@ import org.apache.commons.dbcp.BasicDataSource;
 import org.apache.ibatis.session.SqlSessionFactory;
 import org.mybatis.spring.SqlSessionFactoryBean;
 import org.mybatis.spring.annotation.MapperScan;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.io.ClassPathResource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
-import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
@@ -17,9 +19,11 @@ import javax.sql.DataSource;
  * @author jaksona
  */
 @Configuration
-@EnableTransactionManagement
-@MapperScan(basePackages = "com.jaksona.app.dao")
+@MapperScan("com.jaksona.app.dao")
 public class DatabaseConfig {
+
+	@Autowired
+	ResourceLoader resourceLoader;
 
 	@Bean
 	public DataSource dataSource() {
@@ -50,6 +54,7 @@ public class DatabaseConfig {
 	public SqlSessionFactory sqlSessionFactory() throws Exception {
 		SqlSessionFactoryBean sessionFactory = new SqlSessionFactoryBean();
 		sessionFactory.setDataSource(dataSource());
+		sessionFactory.setMapperLocations(ResourcePatternUtils.getResourcePatternResolver(resourceLoader).getResources("classpath:com/jaksona/app/dao/**/*Mapper.xml"));
 		return sessionFactory.getObject();
 	}
 

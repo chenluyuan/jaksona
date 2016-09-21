@@ -36,6 +36,6 @@ public class UserDAOTest {
 		user.setUsername("admin");
 		user.setPassword(new BCryptPasswordEncoder(8).encode("123"));
 		user.setEnabled(true);
-		System.out.println(userDAO.selectByUsername("admin"));
+		System.out.println(userDAO.selectByEntity(user));
 	}
 }
