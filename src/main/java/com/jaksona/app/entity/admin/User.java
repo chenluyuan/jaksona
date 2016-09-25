@@ -2,7 +2,10 @@ package com.jaksona.app.entity.admin;
 
 import com.jaksona.app.entity.BaseEntity;
 
+import java.util.List;
+
 /**
+ * 用户
  * @author jaksona
  */
 public class User extends BaseEntity {
@@ -11,8 +14,11 @@ public class User extends BaseEntity {
 	private String password;
 	private Boolean enabled;
 
-	// setter and getter
+	// relations
+	private List<Role> roles;
+	private List<Group> groups;
 
+	// setter and getter
 	public String getUsername() {
 		return username;
 	}
@@ -37,6 +43,14 @@ public class User extends BaseEntity {
 		this.enabled = enabled;
 	}
 
+	public List<Role> getRoles() {
+		return roles;
+	}
+
+	public void setRoles(List<Role> roles) {
+		this.roles = roles;
+	}
+
 	@Override
 	public String toString() {
 		return "User{" +
@@ -44,5 +58,13 @@ public class User extends BaseEntity {
 				", password='" + password + '\'' +
 				", enabled=" + enabled +
 				'}';
+	}
+
+	public List<Group> getGroups() {
+		return groups;
+	}
+
+	public void setGroups(List<Group> groups) {
+		this.groups = groups;
 	}
 }

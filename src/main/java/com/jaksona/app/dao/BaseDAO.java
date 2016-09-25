@@ -1,5 +1,7 @@
 package com.jaksona.app.dao;
 
+import org.springframework.dao.DataAccessException;
+
 import java.util.List;
 
 /**
@@ -12,42 +14,36 @@ public interface BaseDAO<T> {
 	 * @param id
 	 * @return
 	 */
-	T selectByPrimaryKey(Long id);
+	T selectByPrimaryKey(Long id) throws DataAccessException;
 
 	/**
 	 * 根据主键ID插入
 	 * @param entity
 	 */
-	int insertSelective(T entity);
+	int insertSelective(T entity) throws DataAccessException;
 
 	/**
 	 * 根据主键ID物理删除
 	 * @param id
 	 */
-	int physicDeleteByPrimaryKey(Long id);
+	int physicDeleteByPrimaryKey(Long id) throws DataAccessException;
 
 	/**
 	 * 根据主键ID逻辑删除
 	 * @param id
 	 */
-	int logicDeleteByPrimaryKey(Long id);
+	int logicDeleteByPrimaryKey(Long id) throws DataAccessException;
 
 	/**
 	 * 根据实体查询
 	 * @return
 	 */
-	List<T> selectByEntity(T entity);
+	List<T> selectByEntity(T entity) throws DataAccessException;
 
 	/**
 	 * 根据ID更新实体
 	 * @param entity
 	 * @return
 	 */
-	int updateByIdSelective(T entity);
-
-	/**
-	 * 查询所有
-	 * @return
-	 */
-	List<T> selectAll();
+	int updateByIdSelective(T entity) throws DataAccessException;
 }

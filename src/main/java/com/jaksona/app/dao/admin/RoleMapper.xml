@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaksona.app.dao.admin.RoleDAO">
+	<sql id="ALL_COLUMN">
+		id,username,name
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="long" resultType="com.jaksona.app.entity.admin.Role">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM authorities
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByUsername" parameterType="String" resultType="int">
+		SELECT group_concat() FROM authorities WHERE username = #{username}
+	</select>
+
+	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.Role" resultType="com.jaksona.app.entity.admin.Role">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM authorities
+		<where>
+			<if test="id != null">
+				id = #{id}
+			</if>
+			<if test="username != null and username != ''">
+				username = #{username}
+			</if>
+			<if test="enabled != null">
+				enabled = #{enabled}
+			</if>
+		</where>
+		<if test="pageLimit != null">
+			limit #{start}, #{limit}
+		</if>
+	</select>
+
+	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.Role" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO authorities (id, username, password, enabled)
+		VALUES (#{id}, #{username}, #{password}, #{enabled})
+	</insert>
+</mapper>

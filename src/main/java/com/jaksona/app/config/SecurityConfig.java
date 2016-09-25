@@ -9,6 +9,8 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -56,6 +58,32 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
+	 * Override this method to expose a {@link UserDetailsService} created from
+	 * {@link #configure(AuthenticationManagerBuilder)} as a bean. In general only the
+	 * following override should be done of this method:
+	 * <p>
+	 * <pre>
+	 * &#064;Bean(name = &quot;myUserDetailsService&quot;)
+	 * // any or no name specified is allowed
+	 * &#064;Override
+	 * public UserDetailsService userDetailsServiceBean() throws Exception {
+	 * 	return super.userDetailsServiceBean();
+	 * }
+	 * </pre>
+	 * <p>
+	 * To change the instance returned, developers should change
+	 * {@link #userDetailsService()} instead
+	 *
+	 * @return
+	 * @throws Exception
+	 * @see #userDetailsService()
+	 */
+	@Override
+	public UserDetailsService userDetailsServiceBean() throws Exception {
+		return super.userDetailsServiceBean();
+	}
+
+	/**
 	 * Override this method to configure {@link WebSecurity}. For example, if you wish to
 	 * ignore certain requests.
 	 *
@@ -63,7 +91,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/webjars/**", "/images/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
+		web.ignoring().antMatchers("/resources/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
 	}
 
 	@Override

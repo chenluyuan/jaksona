@@ -2,29 +2,48 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
 		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jaksona.app.dao.admin.UserDAO">
-	<sql id="ALL_COLUMN">
-		id,username,password,enabled
-	</sql>
 
-	<select id="selectByPrimaryKey" parameterType="long" resultType="com.jaksona.app.entity.admin.User">
+	<resultMap id="detailsUserMap" type="com.jaksona.app.entity.admin.User">
+		<id property="id" column="uid"/>
+		<result property="username" column="username"/>
+		<result property="password" column="password"/>
+		<result property="enabled" column="enabled"/>
+		<collection property="roles" ofType="com.jaksona.app.entity.admin.Role">
+			<id property="id" column="rid"/>
+			<result property="name" column="rname"/>
+			<result property="descn" column="rdescn"/>
+		</collection>
+		<collection property="groups" ofType="com.jaksona.app.entity.admin.Group">
+			<id property="id" column="gid"/>
+			<result property="name" column="gname"/>
+			<result property="descn" column="gdescn"/>
+		</collection>
+	</resultMap>
+
+	<select id="selectByPrimaryKey" parameterType="long" resultMap="detailsUserMap">
 		SELECT
-		<include refid="ALL_COLUMN"/>
-		FROM users
-		WHERE id = #{id}
+			u.id as uid, u.username as username, u.password as password, u.enabled as enabled,
+			r.id as rid, r.name as rname, r.descn as rdescn,
+			g.id as gid, g.name as gname, g.descn as gdescn
+		FROM users u
+		LEFT JOIN user_role uo ON u.id = uo.user_id
+		LEFT JOIN roles r ON r.id = uo.role_id
+		LEFT JOIN group_user gu ON gu.user_id = u.id
+		LEFT JOIN groups g ON g.id = gu.group_id
+		WHERE u.id = #{id}
 	</select>
 
-	<select id="selectByUsername" parameterType="String" resultType="int">
-		SELECT count(id) FROM user WHERE username = #{username}
-	</select>
-
-	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.User" resultType="com.jaksona.app.entity.admin.User">
+	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.User" resultMap="detailsUserMap">
 		SELECT
-		<include refid="ALL_COLUMN"/>
-		FROM users
+			u.id as uid, u.username as username, u.enabled as enabled,
+			r.id as rid, r.name as rname, r.descn as rdescn,
+			g.id as gid, g.name as gname, g.descn as gdescn
+		FROM users u
+		LEFT JOIN user_role uo ON u.id = uo.user_id
+		LEFT JOIN roles r ON r.id = uo.role_id
+		LEFT JOIN group_user gu ON gu.user_id = u.id
+		LEFT JOIN groups g ON g.id = gu.group_id
 		<where>
-			<if test="id != null">
-				id = #{id}
-			</if>
 			<if test="username != null and username != ''">
 				username = #{username}
 			</if>
@@ -32,13 +51,24 @@
 				enabled = #{enabled}
 			</if>
 		</where>
-		<if test="extLimit != null">
-			limit #{start}, #{limit}
+		<if test="pageLimit != null">
+			<if test="pageLimit.sortInfo != null">
+				ORDER BY #{pageLimit.sortInfo.field} #{pageLimit.sortInfo.direction}
+			</if>
+			LIMIT #{start}, #{limit}
 		</if>
+	</select>
+
+	<select id="selectByUsername" parameterType="String" resultType="com.jaksona.app.entity.admin.User">
+		SELECT
+			id,username,enabled
+		FROM users
+		WHERE username = #{username}
 	</select>
 
 	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.User" keyProperty="id" useGeneratedKeys="true">
 		INSERT INTO users (id, username, password, enabled)
 		VALUES (#{id}, #{username}, #{password}, #{enabled})
 	</insert>
+
 </mapper>

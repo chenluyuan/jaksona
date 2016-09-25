@@ -3,11 +3,13 @@ package com.jaksona.app.service.admin.imp;
 import com.jaksona.app.dao.admin.UserDAO;
 import com.jaksona.app.entity.admin.User;
 import com.jaksona.app.service.admin.UserService;
-import com.jaksona.app.service.admin.exception.TableFieldUniqueException;
+import com.jaksona.app.service.admin.exception.DataExistsException;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
 import java.util.Collection;
@@ -23,45 +25,94 @@ public class UserServiceImp implements UserService {
 
 	private UserDAO userDAO;
 
+	/**
+	 * Load the T for the condition
+	 *
+	 * @param user the condition
+	 * @return The users for the condition
+	 */
 	@Override
-	public Collection<User> getUsersForCondition(User user) {
+	public Collection<User> search(User user) {
 		Assert.notNull(user, "user is null");
 		if(log.isDebugEnabled()) {
-			log.debug("select user ==>" + user);
+			log.debug("search user by condition ==>" + user);
 		}
 		return getUserDAO().selectByEntity(user);
 	}
 
+	/**
+	 * Load a T by id
+	 *
+	 * @param id The id of the user
+	 * @return The User that was read
+	 */
 	@Override
-	public User loadUser(Long id) {
+	public User load(Long id) {
 		Assert.notNull(id, "id is null");
 		if(log.isDebugEnabled()) {
-			log.debug("select id ==>" + id);
+			log.debug("select user by id ==>" + id);
 		}
 		return getUserDAO().selectByPrimaryKey(id);
 	}
 
+	/**
+	 * Create the T
+	 *
+	 * @param user The T that was added
+	 */
 	@Override
-	public int addUser(User user) throws TableFieldUniqueException {
+	@Transactional(rollbackFor = Exception.class)
+	public void create(User user) throws DataExistsException {
 		if(log.isDebugEnabled()) {
-			log.debug("add user ==>" + user);
+			log.debug("create user ==>" + user);
 		}
 
-		if(!existUser(user.getUsername())) {
-			return getUserDAO().insertSelective(user);
+		if(!exists(user.getUsername())) {
+			user.setPassword(new BCryptPasswordEncoder(8).encode(user.getPassword()));
+			getUserDAO().insertSelective(user);
 		}else {
-			throw new TableFieldUniqueException(user.getUsername() + " have already exited");
+			throw new DataExistsException(user.getUsername() + " have already exited");
 		}
 	}
 
+	/**
+	 * Create the Ts
+	 *
+	 * @param objs The T's that was added
+	 */
 	@Override
-	public int modifyUser(User user) {
-		return 0;
+	public void create(Collection<User> objs) throws DataExistsException {
+
 	}
 
+	/**
+	 * Edit the T
+	 *
+	 * @param obj The T that was edited, must contain id
+	 */
 	@Override
-	public int removeUser(Long id) {
-		return 0;
+	public void edit(User obj) {
+
+	}
+
+	/**
+	 * Remove the T by id
+	 *
+	 * @param id The T's id that will remove
+	 */
+	@Override
+	public void remove(Long id) {
+
+	}
+
+	/**
+	 * Remove the Ts by ids
+	 *
+	 * @param ids The collections of id
+	 */
+	@Override
+	public void remove(Collection<Long> ids) {
+
 	}
 
 	/**
@@ -71,7 +122,7 @@ public class UserServiceImp implements UserService {
 	 * @return whether or not exists
 	 */
 	@Override
-	public boolean existUser(String username) {
+	public boolean exists(String username) {
 		return getUserDAO().selectByUsername(username) == 1;
 	}
 

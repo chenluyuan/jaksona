@@ -45,7 +45,7 @@
 				</div>
 				<div class="form-group">
 					<label for="password">Password:</label> <input id="password"
-																   class="form-control" type='text' name='password' value="password" />
+																   class="form-control" type='text' name='password' value="user" />
 				</div>
 				<button class="btn btn-primary" type="submit">Login</button>
 				<input type="hidden" name="${_csrf.parameterName}"

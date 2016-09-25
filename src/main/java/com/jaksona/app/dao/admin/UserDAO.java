@@ -4,11 +4,12 @@ import com.jaksona.app.dao.BaseDAO;
 import com.jaksona.app.entity.admin.User;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.springframework.dao.DataAccessException;
 
 /**
  * @author jaksona
  */
 public interface UserDAO extends BaseDAO<User> {
 
-	int selectByUsername(String username);
+	int selectByUsername(String username) throws DataAccessException;
 }

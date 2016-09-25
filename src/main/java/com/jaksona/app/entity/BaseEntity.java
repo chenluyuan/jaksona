@@ -1,6 +1,7 @@
 package com.jaksona.app.entity;
 
-import com.jaksona.app.ExtLimit;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.jaksona.app.PageLimit;
 
 import java.io.Serializable;
 
@@ -8,10 +9,11 @@ import java.io.Serializable;
  * 所有数据库实体基类
  * @author jaksona
  */
+@JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class BaseEntity implements Serializable {
 	private Long id;
 	private Integer status;
-	private ExtLimit extLimit;
+	private PageLimit pageLimit;
 
 	public Long getId() {
 		return id;
@@ -29,11 +31,11 @@ public class BaseEntity implements Serializable {
 		this.status = status;
 	}
 
-	public ExtLimit getExtLimit() {
-		return extLimit;
+	public PageLimit getPageLimit() {
+		return pageLimit;
 	}
 
-	public void setExtLimit(ExtLimit extLimit) {
-		this.extLimit = extLimit;
+	public void setPageLimit(PageLimit pageLimit) {
+		this.pageLimit = pageLimit;
 	}
 }

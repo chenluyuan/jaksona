@@ -2,11 +2,9 @@ package com.jaksona.app.controller.admin;
 
 import com.jaksona.app.entity.admin.User;
 import com.jaksona.app.service.admin.UserService;
-import com.jaksona.app.service.admin.exception.TableFieldUniqueException;
+import com.jaksona.app.service.admin.exception.DataExistsException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.*;
-import org.springframework.stereotype.Controller;
-import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -23,7 +21,7 @@ public class UserController {
 
 	@RequestMapping(value = "/{userId}", method = RequestMethod.GET)
 	public ResponseEntity<User> getUser(@PathVariable("userId") Long id) {
-		User user = getUserService().loadUser(id);
+		User user = getUserService().load(id);
 		if(user == null) {
 			return new ResponseEntity<User>(HttpStatus.NOT_FOUND);
 		}else {
@@ -32,8 +30,8 @@ public class UserController {
 	}
 
 	@RequestMapping(method = RequestMethod.GET)
-	public ResponseEntity<Collection<User>> searchUser(@RequestBody User user) {
-		Collection<User> users = getUserService().getUsersForCondition(user);
+	public ResponseEntity<Collection<User>> searchUser(@RequestParam(value = "user", required = false) User user) {
+		Collection<User> users = getUserService().search(user);
 		if(users == null) {
 			return new ResponseEntity<Collection<User>>(HttpStatus.NOT_FOUND);
 		}else {
@@ -46,11 +44,19 @@ public class UserController {
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
 		try {
-			getUserService().addUser(user);
+			getUserService().create(user);
 			return new ResponseEntity<String>("添加成功", headers, HttpStatus.CREATED);
-		} catch (TableFieldUniqueException e) {
-			return new ResponseEntity<String>(user.getUsername() + "已经存在", headers, HttpStatus.EXPECTATION_FAILED);
+		} catch (DataExistsException e) {
+			return new ResponseEntity<String>(user.getUsername() + "已经存在", headers, HttpStatus.BAD_REQUEST);
 		}
+	}
+
+	@RequestMapping(value = "/{userId}", method = RequestMethod.DELETE)
+	public ResponseEntity<String> removeUser(@PathVariable("userId") Long id) {
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON_UTF8);
+		getUserService().remove(id);
+		return new ResponseEntity<String>("删除用户成功", headers, HttpStatus.NO_CONTENT);
 	}
 
 	public UserService getUserService() {

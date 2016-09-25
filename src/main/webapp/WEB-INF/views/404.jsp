@@ -9,6 +9,6 @@
 	<title>404 错误页</title>
 </head>
 <body>
-	没有找到需要的资源
+	${msg}
 </body>
 </html>

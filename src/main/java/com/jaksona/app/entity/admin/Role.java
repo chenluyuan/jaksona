@@ -5,18 +5,17 @@ import com.jaksona.app.entity.BaseEntity;
 import java.util.List;
 
 /**
- * 组
+ * 角色
  * @author jaksona
  */
-public class Group extends BaseEntity {
+public class Role extends BaseEntity {
 	// members
 	private String name;
 	private String descn;
-	private Group parent;
 
 	// relations
 	private List<User> users;
-	private List<Role> roles;
+	private List<Permission> permissions;
 
 	// setter and getter
 	public String getName() {
@@ -43,19 +42,11 @@ public class Group extends BaseEntity {
 		this.users = users;
 	}
 
-	public List<Role> getRoles() {
-		return roles;
+	public List<Permission> getPermissions() {
+		return permissions;
 	}
 
-	public void setRoles(List<Role> roles) {
-		this.roles = roles;
-	}
-
-	public Group getParent() {
-		return parent;
-	}
-
-	public void setParent(Group parent) {
-		this.parent = parent;
+	public void setPermissions(List<Permission> permissions) {
+		this.permissions = permissions;
 	}
 }
