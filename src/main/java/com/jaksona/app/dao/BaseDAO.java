@@ -26,13 +26,13 @@ public interface BaseDAO<T> {
 	 * 根据主键ID物理删除
 	 * @param id
 	 */
-	int physicDeleteByPrimaryKey(Long id) throws DataAccessException;
+	int deleteByPrimaryKey(Long id) throws DataAccessException;
 
 	/**
 	 * 根据主键ID逻辑删除
 	 * @param id
 	 */
-	int logicDeleteByPrimaryKey(Long id) throws DataAccessException;
+	int updateActiveByPrimaryKey(Long id) throws DataAccessException;
 
 	/**
 	 * 根据实体查询
@@ -45,5 +45,5 @@ public interface BaseDAO<T> {
 	 * @param entity
 	 * @return
 	 */
-	int updateByIdSelective(T entity) throws DataAccessException;
+	int updateByPrimaryKeySelective(T entity) throws DataAccessException;
 }

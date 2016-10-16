@@ -61,7 +61,7 @@
 
 	<select id="selectByUsername" parameterType="String" resultType="com.jaksona.app.entity.admin.User">
 		SELECT
-			id,username,enabled
+			id,username,password,enabled
 		FROM users
 		WHERE username = #{username}
 	</select>

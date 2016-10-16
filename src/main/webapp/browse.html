@@ -2,17 +2,15 @@
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
 <title>Client Authentication Example</title>
-<link type="text/css" rel="stylesheet"
-	href="webjars/bootstrap/3.0.3/css/bootstrap.min.css" />
-<script type="text/javascript" src="webjars/jquery/1.9.0/jquery.min.js"></script>
-<script type="text/javascript"
-	src="webjars/bootstrap/3.0.3/js/bootstrap.min.js"></script>
+	<link href="//cdn.bootcss.com/bootstrap/4.0.0-alpha.3/css/bootstrap.min.css" rel="stylesheet">
+	<script src="//cdn.bootcss.com/jquery/3.1.1/jquery.min.js"></script>
+	<script src="//cdn.bootcss.com/bootstrap/4.0.0-alpha.3/js/bootstrap.min.js"></script>
 <script>
 	function authenticate() {
 		var appID = "my-less-trusted-client";
 		var path = 'oauth/authorize?';
 		var queryParams = [ 'client_id=' + appID,
-				'redirect_uri=' + window.location, 'scope=trust',
+				'redirect_uri=' + window.location, 'scope=read',
 				'response_type=token' ];
 		var query = queryParams.join('&');
 		var url = path + query;
@@ -30,7 +28,7 @@
 			'headers' : headers,
 			dataType : 'text'
 		});
-		$.get('photos/user/message', function(data) {
+		$.get('photos/1', function(data) {
 			console.log('data:' + data);
 			$('#message').text(data);
 		});

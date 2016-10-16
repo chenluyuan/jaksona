@@ -9,8 +9,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.builders.WebSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.jdbc.JdbcDaoImpl;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher;
 
@@ -32,7 +30,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		auth
 				.jdbcAuthentication()
 					.dataSource(dataSource)
-					.passwordEncoder(new BCryptPasswordEncoder(8));
+					.passwordEncoder(new BCryptPasswordEncoder(8))
+					.authoritiesByUsernameQuery("select username,r.name as authority from roles r left join user_role ur on ur.role_id = r.id left join users u on u.id = ur.user_id where u.username = ?")
+					.groupAuthoritiesByUsername("select g.id, g.name as group_name, r.name as authority from groups g left join group_user gu on gu.group_id = g.id left join group_role gr on gr.group_id = g.id left join users u on u.id = gu.user_id left join roles r on r.id = gr.role_id where u.username = ? and g.id = gr.group_id and g.id = gu.group_id");
 	}
 
 	/**
@@ -58,32 +58,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	}
 
 	/**
-	 * Override this method to expose a {@link UserDetailsService} created from
-	 * {@link #configure(AuthenticationManagerBuilder)} as a bean. In general only the
-	 * following override should be done of this method:
-	 * <p>
-	 * <pre>
-	 * &#064;Bean(name = &quot;myUserDetailsService&quot;)
-	 * // any or no name specified is allowed
-	 * &#064;Override
-	 * public UserDetailsService userDetailsServiceBean() throws Exception {
-	 * 	return super.userDetailsServiceBean();
-	 * }
-	 * </pre>
-	 * <p>
-	 * To change the instance returned, developers should change
-	 * {@link #userDetailsService()} instead
-	 *
-	 * @return
-	 * @throws Exception
-	 * @see #userDetailsService()
-	 */
-	@Override
-	public UserDetailsService userDetailsServiceBean() throws Exception {
-		return super.userDetailsServiceBean();
-	}
-
-	/**
 	 * Override this method to configure {@link WebSecurity}. For example, if you wish to
 	 * ignore certain requests.
 	 *
@@ -91,7 +65,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 	 */
 	@Override
 	public void configure(WebSecurity web) throws Exception {
-		web.ignoring().antMatchers("/resources/**", "/oauth/uncache_approvals", "/oauth/cache_approvals");
+		web.ignoring().antMatchers("/resources/**", "/**/*.html");
 	}
 
 	@Override
@@ -100,12 +74,11 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 		http
 				.authorizeRequests()
 				.antMatchers("/login.jsp").permitAll()
-				.anyRequest().hasRole("USER")
+				.anyRequest().authenticated()
 				.and()
 				.exceptionHandling()
 				.accessDeniedPage("/login.jsp?authorization_error=true")
 				.and()
-				// TODO: put CSRF protection back into this endpoint
 				.csrf()
 				.requireCsrfProtectionMatcher(new AntPathRequestMatcher("/oauth/authorize"))
 				.disable()
@@ -115,6 +88,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 				.and()
 				.formLogin()
 				.loginProcessingUrl("/login")
+				.successForwardUrl("/index.html")
 				.failureUrl("/login.jsp?authentication_error=true")
 				.loginPage("/login.jsp");
 		// @formatter:on

@@ -15,4 +15,11 @@ public interface UserService extends BaseService<User> {
 	 * @return whether or not exists
 	 */
 	boolean exists(String username);
+
+	/**
+	 * find the user for given username
+	 * @param username
+	 * @return
+	 */
+	User findByUsername(String username);
 }

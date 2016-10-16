@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+		"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jaksona.app.dao.admin.PermissionDAO">
+	<sql id="ALL_COLUMN">
+		id,name,descn,type,url,sort,parent,create_time createTime,update_time updateTime,user_id userId,hidden,code,active
+	</sql>
+
+	<sql id="VALUES">
+		<trim suffixOverrides=",">
+			<if test="name != null and name != ''">
+				#{name},
+			</if>
+			<if test="descn != null and descn != ''">
+				#{descn},
+			</if>
+			<if test="type != null">
+				#{type},
+			</if>
+			<if test="url != null and url != ''">
+				#{url},
+			</if>
+			<if test="code != null and code != ''">
+				#{code},
+			</if>
+			<if test="sort != null">
+				#{sort},
+			</if>
+			<if test="parent != null">
+				#{parent},
+			</if>
+			<if test="createTime != null">
+				#{createTime},
+			</if>
+			<if test="updateTime != null">
+				#{updateTime},
+			</if>
+			<if test="userId != null">
+				#{userId},
+			</if>
+			<if test="hidden != null">
+				#{hidden},
+			</if>
+			<if test="active != null">
+				#{active},
+			</if>
+		</trim>
+	</sql>
+
+	<select id="selectByPrimaryKey" parameterType="long" resultType="com.jaksona.app.entity.admin.Permission">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM permissions
+		WHERE id = #{id}
+	</select>
+
+	<select id="selectByEntity" parameterType="com.jaksona.app.entity.admin.Permission" resultType="com.jaksona.app.entity.admin.Permission">
+		SELECT
+		<include refid="ALL_COLUMN"/>
+		FROM permissions
+		<where>
+			<if test="parent != null">
+				parent = #{parent}
+			</if>
+			<if test="type != null">
+				type = #{type}
+			</if>
+			<if test="sort != null">
+				sort = #{sort}
+			</if>
+			<if test="name != null and name != ''">
+				name = #{name}
+			</if>
+			<if test="code != null and code != ''">
+				code = #{code}
+			</if>
+			<if test="hidden != null">
+				hidden = #{hidden}
+			</if>
+			<if test="active != null">
+				active = #{active}
+			</if>
+		</where>
+		<if test="pageLimit != null">
+			<if test="pageLimit.sortInfo != null">
+				ORDER BY #{pageLimit.sortInfo.field} #{pageLimit.sortInfo.direction}
+			</if>
+			LIMIT #{pageLimit.start}, #{pageLimit.limit}
+		</if>
+	</select>
+
+	<insert id="insertSelective" parameterType="com.jaksona.app.entity.admin.Permission" keyProperty="id" useGeneratedKeys="true">
+		INSERT INTO
+			permissions (id,name,descn,type,url,sort,parent,create_time,update_time,user_id,hidden,code,active)
+		VALUES (<include refid="VALUES" /> )
+
+	</insert>
+
+	<delete id="deleteByPrimaryKey" parameterType="long">
+		DELETE FROM permissions WHERE id = #{id}
+	</delete>
+
+	<update id="updateActiveByPrimaryKey" parameterType="long">
+		UPDATE permissions SET active = FALSE WHERE id = #{id}
+	</update>
+
+	<update id="updateByPrimaryKeySelective" parameterType="com.jaksona.app.entity.admin.Permission">
+		UPDATE permissions
+		<set>
+			<if test="name != null and name != ''">
+				name = #{name},
+			</if>
+			<if test="descn != null and descn != ''">
+				descn = #{descn},
+			</if>
+			<if test="url != null and url != ''">
+				url = #{url},
+			</if>
+			<if test="code != null and code != ''">
+				code = #{code},
+			</if>
+			<if test="type != null">
+				type = #{type},
+			</if>
+			<if test="sort != null">
+				sort = #{sort},
+			</if>
+			<if test="parent != null">
+				parent = #{parent},
+			</if>
+			<if test="updateTime != null">
+				updateTime = #{updateTime},
+			</if>
+			<if test="userId != null">
+				userId = #{userId},
+			</if>
+			<if test="hidden != null">
+				hidden = #{hidden},
+			</if>
+			<if test="active != null">
+				active = #{active},
+			</if>
+			<if test="createTime != null">
+				createTime = #{createTime},
+			</if>
+		</set>
+		WHERE id = #{id}
+	</update>
+</mapper>

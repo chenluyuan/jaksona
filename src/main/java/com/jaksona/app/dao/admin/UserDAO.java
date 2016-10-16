@@ -11,5 +11,5 @@ import org.springframework.dao.DataAccessException;
  */
 public interface UserDAO extends BaseDAO<User> {
 
-	int selectByUsername(String username) throws DataAccessException;
+	User selectByUsername(String username) throws DataAccessException;
 }

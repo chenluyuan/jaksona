@@ -2,6 +2,7 @@ package com.jaksona.app.service.admin.imp;
 
 import com.jaksona.app.dao.admin.UserDAO;
 import com.jaksona.app.entity.admin.User;
+import com.jaksona.app.service.BaseServiceAdapter;
 import com.jaksona.app.service.admin.UserService;
 import com.jaksona.app.service.admin.exception.DataExistsException;
 import org.apache.commons.logging.Log;
@@ -123,7 +124,18 @@ public class UserServiceImp implements UserService {
 	 */
 	@Override
 	public boolean exists(String username) {
-		return getUserDAO().selectByUsername(username) == 1;
+		return getUserDAO().selectByUsername(username) != null;
+	}
+
+	/**
+	 * find the user for given username
+	 *
+	 * @param username
+	 * @return
+	 */
+	@Override
+	public User findByUsername(String username) {
+		return getUserDAO().selectByUsername(username);
 	}
 
 	public UserDAO getUserDAO() {

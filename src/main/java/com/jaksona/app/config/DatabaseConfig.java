@@ -11,6 +11,7 @@ import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.core.io.support.ResourcePatternUtils;
 import org.springframework.jdbc.datasource.DataSourceTransactionManager;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.sql.DataSource;
 
@@ -19,6 +20,7 @@ import javax.sql.DataSource;
  * @author jaksona
  */
 @Configuration
+@EnableTransactionManagement
 @MapperScan("com.jaksona.app.dao")
 public class DatabaseConfig {
 
